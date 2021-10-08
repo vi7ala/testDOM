@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div id="calendar"></div>
+    <script>
+        function createCalendar(elem, year, month){
+            if(month <= 0 && month >= 12) return false;
+            let days = getDaysInMonth(year, month);
+            month -= 1;
+            let week = 0;
+            let calendarObject = [];
+            calendarObject[week] = [...Array(7)].map((val)=> val = '');
+            for(let i = 1; i <= days; i++){
+                let weekDay = parseInt(new Date(year, month, i).getDay()) - 1;
+                if(weekDay === -1) weekDay = 6;
+                else if(weekDay == 0){
+                    week++;
+                    calendarObject[week] = [...Array(7)].map((val)=> val = '');
+                }
+                week = week >= 0 ? week : week++;
+                calendarObject[week][weekDay] = i;
+            }
+
+            let table = document.createElement('table')
+            let dayNames = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+            let tr = document.createElement('tr');
+            
+            for(let d of dayNames){
+                let th = document.createElement('td');
+                th.append(d);
+                th.style.padding = '3px';
+                th.style.border = '1px solid black';
+                tr.append(th);
+                tr.style.background = 'silver';
+            }
+            
+            table.append(tr);
+            table.style.borderCollapse = 'collapse'
+
+            for(let week of calendarObject){
+                let tr = document.createElement('tr');
+                for(let day of week){
+                    let td = document.createElement('td');
+                    td.append(day);
+                    td.style.padding = '3px';
+                    td.style.border = '1px solid black';
+                    tr.append(td);
+                }
+                table.append(tr);
+            }
+
+            elem.prepend(table);
+        }
+
+        function getDaysInMonth(year, month){
+            return new Date(year, month, 0).getDate();
+        }
+
+        let calendar = document.getElementById('calendar');
+
+        createCalendar(calendar, 2021, 10);
+
+    </script>
+</body>
+</html>

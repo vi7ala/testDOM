@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+
+        function updateEx2Ul(){
+            document.body.insertAdjacentHTML('afterbegin', `
+            <div id="ex2">
+        <ul>
+            <li>Животные
+                <ul>
+                    <li>Млекопитающие
+                        <ul>
+                            <li>Коровы</li>
+                            <li>Ослы</li>
+                            <li>Собаки</li>
+                            <li>Тигры</li>
+                        </ul>
+                    </li>
+                    <li>Другие
+                        <ul>
+                            <li>Змеи</li>
+                            <li>Птицы</li>
+                            <li>Ящерицы</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Рыбы
+                <ul>
+                    <li>Аквариумные
+                        <ul>
+                            <li>Гуппи</li>
+                            <li>Скалярии</li>
+                        </ul>
+                    </li>
+                    <li>Морские
+                        <ul>
+                            <li>Морская форель</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>`)
+            let ex2Div = document.getElementById('ex2');
+            let ex2DivChildren = ex2Div.children;
+            // let li = ex2Div.querySelectorAll('li');
+            let ul;
+            for(let i of ex2DivChildren){
+                if (i.tagName == "UL") {
+                    ul = i;
+                    break;
+                }
+            }
+            countChildElements(ul);
+        }
+        
+        function countChildElements(ul){
+            for(let i of ul.children){
+                let count = i.querySelectorAll('li').length;
+                if (!count) continue;
+                i.firstChild.after('[' + count + ']');
+                let childUl = i.querySelector('ul');
+                if(childUl) countChildElements(childUl);
+            }
+        }
+
+        updateEx2Ul();
+
+        let container = document.createElement('div');
+        container.setAttribute('id', 'container');
+        document.body.prepend(container);
+        container.style.background = 'silver'
+
+        let data = {
+            "Рыбы": {
+                "форель": {},
+                "лосось": {}
+            },
+
+            "Деревья": {
+                "Огромные": {
+                    "секвойя": {},
+                    "дуб": {}
+                },
+                "Цветковые": {
+                    "яблоня": {},
+                    "магнолия": {}
+                }
+            }
+        };
+
+        recursionRebuildObjectElements = (data) => {
+            let ul = document.createElement('ul');
+            for (let i in data) {
+                let li = document.createElement('li');
+                li.textContent = i;
+                if (typeof data[i] === 'object' && Object.keys(data[i]).length !== 0) {
+                    li.append(recursionRebuildObject(data[i]))
+                }
+                ul.append(li);
+            }
+            return ul;
+        }
+
+        recursionRebuildObjectString = (data) => {
+            let html = '<ul>'
+            for (let i in data) {
+                html += '<li>' + i;
+                if (typeof data[i] === 'object' && Object.keys(data[i]).length !== 0) {
+                    html += recursionRebuildObjectString(data[i]);
+                }
+                html += '</li>'
+            }
+            html += '</ul>';
+            return html;
+        }
+
+        createTreeOne = (container, data) => {
+            let result = recursionRebuildObjectElements(data);
+            if (typeof data !== 'object' || Object.keys(data).length === 0) {
+                console.log('data is empty');
+                return;
+            }
+            container.append(result)
+        }
+
+        createTreeTwo = (container, data) => {
+            if (typeof data !== 'object' || Object.keys(data).length === 0) {
+                console.log('data is empty');
+                return;
+            }
+            let html = recursionRebuildObjectString(data);
+            container.innerHTML = html;
+        }
+
+
+    </script>
+</body>
+
+</html>
