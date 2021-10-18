@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function showNotification({top = 10, right = 10, html = "Hello", className = "welcome" } = {}) {
+            let div = document.createElement('div');
+            div.innerHTML = html;
+            
+            div.style.cssText = `position: absolute; visibility: hidden;`;
+            className && div.classList.add(className);
+            document.body.prepend(div);
+            let halfWidthDiv = parseInt(getComputedStyle(div).width)/2;
+            div.style.top = top ? top + 'px' : '';
+            div.style.right = right ? right - halfWidthDiv + 'px' : '';
+            setTimeout(()=>{
+                div.style.visibility = '';
+            }, 2000)
+        }
+        let centerHorizontal = getComputedStyle(document.body).width;
+        console.log(parseInt(centerHorizontal)/2);
+        showNotification({top: 10, right: parseInt(centerHorizontal)/2});
+    </script>
+</body>
+
+</html>
